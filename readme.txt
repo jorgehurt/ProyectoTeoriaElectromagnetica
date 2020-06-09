@@ -225,6 +225,46 @@ xlabel('Y')
 ylabel('Densidad de Carga')
 grid on
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+PROBLEMA 3
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%FUNCION PARA EL PROBLEMA 3 DE RECTANGULARES
+
+1;
+function [x,y,z,q,t,phi,efield,p] = poten(a,b,n,m)
+  xp = -a:0.1:a;
+  yp = -b:0.1:b;
+  [x, y] = meshgrid(xp, yp);
+  k = 0;
+  Eo = 8.84.*10.^-12;
+  z=x;
+  
+  for i = 1:n
+    for s = 1:m
+      h = i*pi/a;
+      t = s*pi/b;
+      fun = @(x,y) (x.*(y.^2)).*sin(h.*y).*sin(t.*x);
+      Fn = integral2(fun,0,b,0,a);
+      Pot= Fn.*(4./(a.*b));
+      k += Pot;
+    endfor
+ endfor
+  phi = k;
+  efield = gradient(-phi);
+  [q,t] = gradient(-phi);
+  p = -Eo.*gradient(phi);
+endfunction 
+
+figure('Name','Grafica de Potencial de LaPlace en Rectangulares')
+title('Grafica de Potencial de LaPlace en Rectangulares');
+[x,y,z,q,t,phi,efield,p] = poten(a,b,2,2);
+surf(x,y,phi);
+colorbar
+xlabel('x'), ylabel('y'), zlabel('Potencial')
+grid on
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%% LaPlace en Coordenadas Esfericas %%%%%%%%%%%%%%%%%%%%%%%%% 

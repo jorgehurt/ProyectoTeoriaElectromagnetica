@@ -230,7 +230,6 @@ grid on
 PROBLEMA 3
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%FUNCION PARA EL PROBLEMA 3 DE RECTANGULARES
-
 1;
 function [x,y,z,q,t,phi,efield,p] = poten(a,b,n,m)
   xp = -a:0.1:a;
@@ -244,10 +243,10 @@ function [x,y,z,q,t,phi,efield,p] = poten(a,b,n,m)
     for s = 1:m
       h = i*pi/a;
       t = s*pi/b;
-      fun = @(x,y) (x.*(y.^2)).*sin(h.*y).*sin(t.*x);
-      Fn = integral2(fun,0,b,0,a);
-      Pot= Fn.*(4./(a.*b));
-      k += Pot;
+      fun = @(x,y) (4./(a*b))*(x.*(y.^2)).*sin(h.*y).*sin(t.*x);
+      Fn = integral2(fun,0,a,0,b);
+      Pot= Fn*sin(h*y).*sin(t*x);
+      k = k + Pot;
     endfor
  endfor
   phi = k;
@@ -255,16 +254,30 @@ function [x,y,z,q,t,phi,efield,p] = poten(a,b,n,m)
   [q,t] = gradient(-phi);
   p = -Eo.*gradient(phi);
 endfunction 
-
+a=1;
+b=1;
 figure('Name','Grafica de Potencial de LaPlace en Rectangulares')
 title('Grafica de Potencial de LaPlace en Rectangulares');
-[x,y,z,q,t,phi,efield,p] = poten(a,b,2,2);
+[x,y,z,q,t,phi,efield,p] = poten(a,b,20,20);
 surf(x,y,phi);
 colorbar
 xlabel('x'), ylabel('y'), zlabel('Potencial')
 grid on
-
-
+% campos electricos 
+figure('Name','Grafica de Campo Electrico de LaPlace en Rectangulares')
+title('Grafica de Campo Electrico de LaPlace en Rectangulares');
+%quiver(q,t);
+quiver3(x,y,z,q,t,efield);
+colorbar
+xlabel('x'), ylabel('y'), zlabel('Campo Electrico')
+% densidad de carga superficial
+figure('Name','Densidad de Carga')
+title('Densidad de Carga');
+plot(y(1:21),(gradient(phi))(1:21))
+xlim([-1 1])
+xlabel('Y')
+ylabel('Densidad de Carga')
+grid on
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%% LaPlace en Coordenadas Esfericas %%%%%%%%%%%%%%%%%%%%%%%%% 
